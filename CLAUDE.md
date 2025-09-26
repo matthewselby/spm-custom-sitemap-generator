@@ -18,13 +18,14 @@ This project uses pnpm as specified in package.json packageManager field.
 
 ## Architecture
 
-This is a single-page vanilla JavaScript application built by Matt Selby for generating XML sitemaps for WP Engine's Smart Plugin Manager (SPM). The app has a simple three-file structure:
+This is a single-page vanilla JavaScript application built by Matt Selby for generating XML sitemaps for WP Engine's Smart Plugin Manager (SPM). The app has a simple file structure:
 
 ### Core Files
 
-- **index.html** - Complete UI layout with WP Engine branding and documentation links
+- **index.html** - Complete UI layout with WP Engine branding, comprehensive meta tags, and documentation links
 - **app.js** - All JavaScript functionality including URL validation, sitemap XML generation, and DOM manipulation
 - **styles.css** - Complete CSS with WP Engine design system colors (#0ECAD4, #006BD6) and responsive design
+- **assets/** - Static assets directory containing favicons, icons, and web app manifest
 
 ### Key Functionality
 
@@ -39,6 +40,16 @@ This is a single-page vanilla JavaScript application built by Matt Selby for gen
 - WP Engine brand colors: #0ECAD4 (teal), #006BD6 (blue), #002447 (dark blue)
 - Responsive grid layouts with mobile-first design
 - Card-based UI with subtle shadows and hover effects
+
+### Assets Structure
+
+The `/assets/` directory contains:
+- **favicon.ico** - Legacy browser support (ICO format)
+- **favicon-96x96.png** - Modern browser favicon (PNG format)
+- **favicon.svg** - Vector favicon for browsers that support SVG
+- **apple-touch-icon.png** - iOS home screen icon (180x180)
+- **site.webmanifest** - Web app manifest for PWA capabilities
+- **web-app-manifest-*.png** - PWA icons in various sizes (192x192, 512x512)
 
 ### Build System
 
