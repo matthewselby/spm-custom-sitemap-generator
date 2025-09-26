@@ -1,0 +1,34 @@
+{
+  "name": "spm-sitemap-generator",
+  "version": "1.0.0",
+  "description": "Custom Sitemap Generator for WP Engine Smart Plugin Manager - Take control of which pages get tested during plugin updates",
+  "scripts": {
+    "dev": "parcel index.html --open",
+    "build": "parcel build index.html --dist-dir dist --public-url ./",
+    "clean": "rm -rf dist .parcel-cache",
+    "start": "pnpm run dev"
+  },
+  "keywords": [
+    "wpengine",
+    "smart-plugin-manager",
+    "sitemap",
+    "xml",
+    "spm",
+    "visual-regression-testing"
+  ],
+  "author": "Matt Selby",
+  "license": "MIT",
+  "packageManager": "pnpm@10.17.1",
+  "devDependencies": {
+    "parcel": "^2.16.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/spm-sitemap-generator.git"
+  },
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
