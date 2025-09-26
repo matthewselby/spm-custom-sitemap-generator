@@ -20,6 +20,8 @@
   "license": "MIT",
   "packageManager": "pnpm@10.17.1",
   "devDependencies": {
+    "@parcel/packager-raw-url": "2.16.0",
+    "@parcel/transformer-webmanifest": "2.16.0",
     "parcel": "^2.16.0"
   },
   "repository": {
