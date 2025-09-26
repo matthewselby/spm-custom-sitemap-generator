@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Sitemap Generator for WP Engine SPM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #ffffff;
+            color: #1F2426;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #0ECAD4 0%, #006BD6 100%);
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            color: white;
+        }
+
+        .header h1 {
+            font-family: 'Lora', serif;
+            font-size: 1.875rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .info-section {
+            background: #F4F5F6;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #0ECAD4;
+        }
+
+        .docs-section {
+            background: #E7FAFB;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #006BD6;
+        }
+
+        .info-section h3,
+        .docs-section h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.2rem;
+            color: #002447;
+            margin-bottom: 0.75rem;
+        }
+
+        .info-section p,
+        .docs-section p {
+            color: #5B6C74;
+            margin-bottom: 0.75rem;
+        }
+
+        .info-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-section li {
+            color: #5B6C74;
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .info-section li:before {
+            content: "•";
+            color: #0ECAD4;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .docs-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .doc-link {
+            background: #ffffff;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            padding: 1rem;
+            text-decoration: none;
+            color: #1F2426;
+            transition: all 0.2s ease;
+        }
+
+        .doc-link:hover {
+            border-color: #0ECAD4;
+            box-shadow: 0 2px 8px rgba(14, 202, 212, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .doc-link-title {
+            font-weight: 600;
+            color: #002447;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .doc-link-desc {
+            font-size: 0.8rem;
+            color: #5B6C74;
+            line-height: 1.4;
+        }
+
+        .info-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-section li {
+            color: #5B6C74;
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .info-section li:before {
+            content: "•";
+            color: #0ECAD4;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .input-section h3 {
+            margin-bottom: 1rem;
+            color: #002447;
+            font-size: 1.2rem;
+            font-family: 'Lora', serif;
+        }
+
+        .url-input-container {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .url-input {
+            flex: 1;
+            padding: 0.875rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #1F2426;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .url-input:focus {
+            outline: none;
+            border-color: #0ECAD4;
+            box-shadow: 0 0 0 3px rgba(14, 202, 212, 0.1);
+        }
+
+        .url-input::placeholder {
+            color: #9CA3AF;
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: #0ECAD4;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #0CA8B1;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(14, 202, 212, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: #D1D5DB;
+            color: #9CA3AF;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: #006BD6;
+            color: #ffffff;
+        }
+
+        .btn-secondary:hover {
+            background: #0056B3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 107, 214, 0.3);
+        }
+
+        .btn-secondary:disabled {
+            background: #D1D5DB;
+            color: #9CA3AF;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-danger {
+            background: #DC2626;
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-danger:hover {
+            background: #B91C1C;
+        }
+
+        .url-list {
+            margin-top: 1.5rem;
+        }
+
+        .url-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #F9FAFB;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid #E5E7EB;
+            gap: 1rem;
+        }
+
+        .url-content {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            gap: 0.75rem;
+        }
+
+        .protocol-select {
+            padding: 0.625rem 0.75rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 6px;
+            background: #ffffff;
+            color: #1F2426;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            min-width: 85px;
+            cursor: pointer;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="%235B6C74"><path d="M4.5 6l3.5 3.5L11.5 6z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 12px;
+            padding-right: 2rem;
+        }
+
+        .protocol-select:focus {
+            outline: none;
+            border-color: #0ECAD4;
+            box-shadow: 0 0 0 3px rgba(14, 202, 212, 0.1);
+        }
+
+        .protocol-select:hover {
+            border-color: #0ECAD4;
+        }
+
+        .url-text {
+            font-family: 'Courier New', monospace;
+            color: #1F2426;
+            word-break: break-all;
+            flex: 1;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #F9FAFB;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #E5E7EB;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0ECAD4;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .stat-label {
+            color: #5B6C74;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .message {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .error-message {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            color: #DC2626;
+        }
+
+        .success-message {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            color: #16A34A;
+        }
+
+        .brand-footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #E5E7EB;
+            color: #5B6C74;
+            font-size: 0.875rem;
+        }
+
+        .brand-footer .logo {
+            color: #0ECAD4;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .url-input-container {
+                flex-direction: column;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .header {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SPM Custom Sitemap Generator</h1>
+            <p>Take control of which pages get tested during plugin updates. Instead of random page selection, you choose exactly which pages Smart Plugin Manager checks to ensure your most critical pages are always protected during automatic updates.</p>
+        </div>
+
+        <div class="docs-section">
+            <h3>Smart Plugin Manager documentation</h3>
+            <p>Learn more about how SPM works with custom sitemaps and visual regression testing:</p>
+            <div class="docs-links">
+                <a href="https://wpengine.com/support/smart-plugin-manager/#Sitemap_Override" target="_blank" class="doc-link">
+                    <div class="doc-link-title">Sitemap Override</div>
+                    <div class="doc-link-desc">How to configure custom sitemaps in SPM settings</div>
+                </a>
+                <a href="https://wpengine.com/support/smart-plugin-manager/#Visual_Regression_Testing_VRT" target="_blank" class="doc-link">
+                    <div class="doc-link-title">Visual Regression Testing</div>
+                    <div class="doc-link-desc">Understanding how SPM tests your pages for changes</div>
+                </a>
+                <a href="https://wpengine.com/support/smart-plugin-manager/#Smart_Plugin_Manager_Settings" target="_blank" class="doc-link">
+                    <div class="doc-link-title">SPM Settings</div>
+                    <div class="doc-link-desc">Complete guide to configuring Smart Plugin Manager</div>
+                </a>
+                <a href="https://wpengine.com/support/smart-plugin-manager/" target="_blank" class="doc-link">
+                    <div class="doc-link-title">SPM Overview</div>
+                    <div class="doc-link-desc">Full Smart Plugin Manager documentation</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>How SPM uses your custom sitemap</h3>
+            <p>Smart Plugin Manager's visual regression testing helps ensure plugin updates don't break your site by taking before and after screenshots of your pages.</p>
+            <ul>
+                <li><strong>Default behavior:</strong> SPM tests 10 random pages including your homepage</li>
+                <li><strong>With custom sitemap:</strong> SPM selects up to 20 URLs from your sitemap (always including homepage)</li>
+                <li><strong>Random selection:</strong> If your sitemap has more than 20 URLs, SPM will test your homepage plus 19 random pages from your sitemap</li>
+                <li><strong>Minimum recommendation:</strong> Include at least 10 URLs to ensure SPM tests your most important pages</li>
+                <li><strong>Best practice:</strong> Add your most critical pages (checkout, contact forms, key landing pages) to increase the likelihood they'll be tested</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <div class="input-section">
+                <h3>Add URLs to your custom sitemap</h3>
+                <div class="url-input-container">
+                    <input 
+                        type="text" 
+                        id="urlInput" 
+                        class="url-input" 
+                        placeholder="https://example.com/important-page"
+                        autocomplete="off"
+                    >
+                    <button onclick="addUrl()" class="btn btn-primary">Add URL</button>
+                </div>
+                <div id="messageContainer"></div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="urlCount">0</div>
+                    <div class="stat-label">URLs Added</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="sitemapSize">0 KB</div>
+                    <div class="stat-label">Sitemap Size</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="spmCoverage">0%</div>
+                    <div class="stat-label">SPM Coverage</div>
+                </div>
+            </div>
+
+            <div class="url-list" id="urlList"></div>
+
+            <div class="actions">
+                <button onclick="generateSitemap()" class="btn btn-secondary" id="generateBtn" disabled>
+                    Generate & Download Sitemap
+                </button>
+                <button onclick="clearAll()" class="btn btn-danger" id="clearBtn" disabled>
+                    Clear All URLs
+                </button>
+            </div>
+        </div>
+
+        <div class="brand-footer">
+            <p>Built for <span class="logo">WP Engine</span> Smart Plugin Manager</p>
+        </div>
+    </div>
+
+    <script>
+        let urls = [];
+
+        function normalizeUrl(input) {
+            // Remove any existing protocol
+            let cleanUrl = input.replace(/^https?:\/\//, '');
+            
+            // Remove any leading slashes
+            cleanUrl = cleanUrl.replace(/^\/+/, '');
+            
+            return {
+                protocol: 'https://',
+                path: cleanUrl
+            };
+        }
+
+        function isValidUrlPath(path) {
+            // Basic validation for the path part (without protocol)
+            if (!path || path.trim() === '') return false;
+            
+            // Check if it looks like a valid domain/path
+            const urlPattern = /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*(\/.*)*/;
+            return urlPattern.test(path);
+        }
+
+        function getFullUrl(urlObj) {
+            return urlObj.protocol + urlObj.path;
+        }
+
+        function showMessage(message, type) {
+            const container = document.getElementById('messageContainer');
+            const messageClass = type === 'error' ? 'error-message' : 'success-message';
+            container.innerHTML = `<div class="message ${messageClass}">${message}</div>`;
+            
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, type === 'error' ? 5000 : 3000);
+        }
+
+        function addUrl() {
+            const input = document.getElementById('urlInput');
+            const inputValue = input.value.trim();
+
+            if (!inputValue) {
+                showMessage('Please enter a URL', 'error');
+                return;
+            }
+
+            const urlObj = normalizeUrl(inputValue);
+
+            if (!isValidUrlPath(urlObj.path)) {
+                showMessage('Please enter a valid URL (e.g., example.com or example.com/page)', 'error');
+                return;
+            }
+
+            const fullUrl = getFullUrl(urlObj);
+            const existingUrl = urls.find(u => getFullUrl(u) === fullUrl);
+            if (existingUrl) {
+                showMessage('This URL has already been added', 'error');
+                return;
+            }
+
+            if (urls.length >= 50000) {
+                showMessage('Maximum of 50,000 URLs allowed per sitemap', 'error');
+                return;
+            }
+
+            urls.push(urlObj);
+            input.value = '';
+            updateDisplay();
+        }
+
+        function removeUrl(index) {
+            urls.splice(index, 1);
+            updateDisplay();
+        }
+
+        function updateProtocol(index, newProtocol) {
+            if (urls[index]) {
+                urls[index].protocol = newProtocol;
+                updateDisplay();
+            }
+        }
+
+        function updateDisplay() {
+            // Update URL count
+            document.getElementById('urlCount').textContent = urls.length;
+
+            // Update sitemap size estimate
+            const sitemapXml = generateSitemapXml();
+            const sizeInBytes = new Blob([sitemapXml]).size;
+            const sizeInKB = (sizeInBytes / 1024).toFixed(1);
+            document.getElementById('sitemapSize').textContent = sizeInKB + ' KB';
+
+            // Update SPM coverage estimate
+            const maxSpmTests = 20; // SPM tests up to 20 URLs
+            const coveragePercent = urls.length === 0 ? 0 : Math.min(100, Math.round((Math.min(urls.length, maxSpmTests) / Math.max(urls.length, maxSpmTests)) * 100));
+            document.getElementById('spmCoverage').textContent = coveragePercent + '%';
+
+            // Update URL list
+            const urlListDiv = document.getElementById('urlList');
+            if (urls.length === 0) {
+                urlListDiv.innerHTML = '';
+            } else {
+                urlListDiv.innerHTML = urls.map((urlObj, index) => `
+                    <div class="url-item">
+                        <div class="url-content">
+                            <select class="protocol-select" onchange="updateProtocol(${index}, this.value)">
+                                <option value="https://" ${urlObj.protocol === 'https://' ? 'selected' : ''}>https://</option>
+                                <option value="http://" ${urlObj.protocol === 'http://' ? 'selected' : ''}>http://</option>
+                            </select>
+                            <span class="url-text">${urlObj.path}</span>
+                        </div>
+                        <button onclick="removeUrl(${index})" class="btn btn-danger">Remove</button>
+                    </div>
+                `).join('');
+            }
+
+            // Update button states
+            const hasUrls = urls.length > 0;
+            document.getElementById('generateBtn').disabled = !hasUrls;
+            document.getElementById('clearBtn').disabled = !hasUrls;
+        }
+
+        function escapeXml(text) {
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&apos;');
+        }
+
+        function generateSitemapXml() {
+            const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+            
+            let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+            xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+            
+            urls.forEach(urlObj => {
+                const fullUrl = getFullUrl(urlObj);
+                xml += '  <url>\n';
+                xml += `    <loc>${escapeXml(fullUrl)}</loc>\n`;
+                xml += `    <lastmod>${currentDate}</lastmod>\n`;
+                xml += '  </url>\n';
+            });
+            
+            xml += '</urlset>';
+            return xml;
+        }
+
+        function generateSitemap() {
+            if (urls.length === 0) {
+                showMessage('Please add at least one URL before generating the sitemap', 'error');
+                return;
+            }
+
+            try {
+                const sitemapXml = generateSitemapXml();
+                const blob = new Blob([sitemapXml], { type: 'application/xml' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'spm-custom-sitemap.xml';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                const urlsMessage = urls.length === 1 ? '1 URL' : `${urls.length} URLs`;
+                const coverageNote = urls.length <= 20 
+                    ? 'SPM will test all your URLs plus the homepage.' 
+                    : `SPM will test your homepage plus 19 random URLs from your ${urls.length} total URLs.`;
+                
+                showMessage(`Sitemap generated successfully! Downloaded with ${urlsMessage}. ${coverageNote}`, 'success');
+            } catch (error) {
+                showMessage('Error generating sitemap. Please try again.', 'error');
+                console.error('Sitemap generation error:', error);
+            }
+        }
+
+        function clearAll() {
+            if (urls.length === 0) return;
+            
+            if (confirm('Are you sure you want to remove all URLs? This cannot be undone.')) {
+                urls = [];
+                updateDisplay();
+                showMessage('All URLs cleared successfully!', 'success');
+            }
+        }
+
+        // Handle Enter key in input field
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addUrl();
+            }
+        });
+
+        // Initialize display
+        updateDisplay();
+    </script>
+</body>
+</html>
