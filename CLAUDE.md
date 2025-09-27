@@ -48,6 +48,7 @@ The `/assets/` directory contains:
 - **favicon-96x96.png** - Modern browser favicon (PNG format)
 - **favicon.svg** - Vector favicon for browsers that support SVG
 - **apple-touch-icon.png** - iOS home screen icon (180x180)
+- **og-image.png** - Open Graph image for social media sharing
 - **site.webmanifest** - Web app manifest for PWA capabilities
 - **web-app-manifest-*.png** - PWA icons in various sizes (192x192, 512x512)
 

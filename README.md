@@ -20,20 +20,25 @@ A tool that helps users create XML sitemaps for Smart Plugin Manager's visual re
 ### Getting Started
 
 1. **Install dependencies:**
+
    ```bash
    pnpm install
    ```
 
 2. **Start development server:**
+
    ```bash
    pnpm run dev
    ```
+
    This will start Parcel dev server with hot reloading at `http://localhost:1234`
 
 3. **Build for production:**
+
    ```bash
    pnpm run build
    ```
+
    Creates optimized files in `dist/` directory
 
 ### Available Scripts
@@ -45,7 +50,7 @@ A tool that helps users create XML sitemaps for Smart Plugin Manager's visual re
 
 ### Project Structure
 
-```
+```text
 ├── index.html          # Main HTML file
 ├── styles.css          # All CSS styles
 ├── app.js             # JavaScript functionality
