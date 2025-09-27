@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Live Site
+
+**Production URL:** <https://spm-custom-sitemap-generator.pages.dev/>
+
+This site is deployed on Cloudflare Pages and automatically updates when changes are pushed to the main branch.
+
 ## Commands
 
 ### Development
@@ -44,6 +50,7 @@ This is a single-page vanilla JavaScript application built by Matt Selby for gen
 ### Assets Structure
 
 The `/assets/` directory contains:
+
 - **favicon.ico** - Legacy browser support (ICO format)
 - **favicon-96x96.png** - Modern browser favicon (PNG format)
 - **favicon.svg** - Vector favicon for browsers that support SVG
